@@ -25,6 +25,13 @@ public class ui_manager : MonoBehaviour
     public GameObject towerPanel;
     public GameObject shopPanel;
 
+    public TextMeshProUGUI upgrade1Text;
+    public TextMeshProUGUI upgrade2Text;
+
+    public TextMeshProUGUI upgrade1Value;
+    public TextMeshProUGUI upgrade2Value;
+    public TextMeshProUGUI rangeValue;
+
     public GameEvent onTowerSelect;
     public GameEvent onGoldChange;
     public GameEvent onWaveSend;
@@ -34,6 +41,10 @@ public class ui_manager : MonoBehaviour
 
     private int numSpawned = 0;
 
+
+    //debug stuff
+    public TMP_InputField waveInput;
+    public GameEvent onWaveSet;
 
     // Start is called before the first frame update
     void Start()
@@ -79,7 +90,7 @@ public class ui_manager : MonoBehaviour
         healthText.text = (Int32.Parse(healthText.text) + (int) data).ToString();
     }
 
-    // ----------------- Tower Upgrade Panel -----------------
+    // ----------------- Tower Upgrade Panel Functions-----------------
     private GameObject selectedTower;
     public void ToggleInfoPanel(GameObject tower)
     {
@@ -90,9 +101,13 @@ public class ui_manager : MonoBehaviour
             return;
         }
 
+        // Set tower and panel as active
         towerPanel.SetActive(true);
         selectedTower = tower;
 
+        // Update displayed stats
+        UpdateDisplayedStats();
+        
         UpdatePanelPositions();
     }
 
@@ -115,6 +130,7 @@ public class ui_manager : MonoBehaviour
         }
         onGoldChange.Raise(this, -selectedTower.GetComponent<tower_base>().upgrade1Cost);
         onTowerDamageUpgrade.Raise(this, selectedTower);
+        UpdateDisplayedStats();
     }
 
     public void UpgradeAttackRate()
@@ -125,6 +141,7 @@ public class ui_manager : MonoBehaviour
         }
         onGoldChange.Raise(this, -selectedTower.GetComponent<tower_base>().upgrade2Cost);
         onTowerAttackRateUpgrade.Raise(this, selectedTower);
+        UpdateDisplayedStats();
     }
 
     private void UpdatePanelPositions()
@@ -144,6 +161,18 @@ public class ui_manager : MonoBehaviour
         }
     }
 
+    private void UpdateDisplayedStats(){
+        // Update Text
+        upgrade1Text.text = selectedTower.GetComponent<tower_base>().upgrade1Name;
+        upgrade2Text.text = selectedTower.GetComponent<tower_base>().upgrade2Name;
+
+        // Update values
+        upgrade1Value.text = selectedTower.GetComponent<tower_base>().damage.ToString();
+        upgrade2Value.text = selectedTower.GetComponent<tower_base>().attackRate.ToString();
+        rangeValue.text = selectedTower.GetComponent<tower_base>().range.ToString();
+    }
+
+    // ----------------- UI Top Level Buttons -----------------
     public void ToggleShopPanel()
     {
         shopPanel.SetActive(!shopPanel.activeSelf);
@@ -152,8 +181,22 @@ public class ui_manager : MonoBehaviour
 
     public void OnSendWaveButtonClick()
     {
-        Debug.Log("Send Wave step 1");
         onWaveSend.Raise(this, null);
+    }
+
+    public void OnSetWave(string wave)
+    {
+        //Debug.Log(waveInput.text);
+        bool success = int.TryParse(waveInput.text, out int number);
+
+        if (success)
+        {
+            onWaveSet.Raise(this, number);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid wave input");
+        }
     }
 
     // ----------------- Tower Placement -----------------

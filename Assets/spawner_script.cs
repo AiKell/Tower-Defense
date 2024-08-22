@@ -15,8 +15,13 @@ public class wave_manager : MonoBehaviour
         //currentWave++;
     }
 
+    public void setWave(Component Sender, object data){
+        currentWave = (int) data - 1;
+        //Debug.Log("wave set to:" + currentWave);
+    }
+
     public void SendNextWave(){
-        Debug.Log("Send wave step 2");
+        //Debug.Log("Send wave step 2");
         StartCoroutine(SendWave());
         currentWave++;
     }

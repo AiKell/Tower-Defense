@@ -107,6 +107,8 @@ MonoBehaviour:
   cost: 5
   upgrade1Cost: 4
   upgrade2Cost: 5
+  upgrade1Name: Damage
+  upgrade2Name: Attack Rate
   priority: 0
   showRange: 0
   rangeColor: {r: 0.9433962, g: 0.7355964, b: 0.734247, a: 0.1}

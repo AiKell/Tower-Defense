@@ -25,6 +25,9 @@ public class tower_base : MonoBehaviour
     public int upgrade1Cost;
     public int upgrade2Cost;
 
+    public string upgrade1Name;
+    public string upgrade2Name;
+
     //--------------Tower options--------------
     public enum TargetPriority { 
         First, 
